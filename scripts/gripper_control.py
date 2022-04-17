@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import rospy
 
-from std_msgs.msg import String
+from std_msgs.msg import UInt8
 from std_srvs.srv import Trigger, TriggerRequest
 from ur_dashboard_msgs.srv import Load
 
-gripper_cmd = String()
+gripper_cmd = UInt8()
 mode_updated = False
 # get the command/mode message
 def get_cmd(cmd):
@@ -20,7 +20,7 @@ if __name__ == '__main__':
 	# define the node and subcribers and publishers
 	rospy.init_node('gripper_control', anonymous = True)
 	# define a subscriber to read images
-	img_sub = rospy.Subscriber("/gripper_cmd", String, get_cmd) 
+	img_sub = rospy.Subscriber("/gripper_cmd", UInt8, get_cmd) 
 
 	# Check if all the services are available
 	print('waiting for the services...not connected to the robot driver!')
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 		print("Service call failed: %s"%e)	
 	while not rospy.is_shutdown():
 		if mode_updated:
-			if gripper_cmd.data == 'close':
+			if gripper_cmd.data == 2:
 				try:
 					# load the close_gripper.urp from the teach pendant 
 					load_urp = rospy.ServiceProxy('/ur_hardware_interface/dashboard/load_program', Load)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 					resp1 = play_urp(request) 
 				except rospy.ServiceException as e:
 					print("Service call failed: %s"%e)
-			elif gripper_cmd.data == 'open':
+			elif gripper_cmd.data == 1:
 				try:
 					# load the open_gripper.urp from the teach pendant 
 					load_urp = rospy.ServiceProxy('/ur_hardware_interface/dashboard/load_program', Load)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
 				except rospy.ServiceException as e:
 					print("Service call failed: %s"%e)
 
-			elif gripper_cmd.data == 'waypoint':
+			elif gripper_cmd.data == 0:
 				try:
 					# load the ros_connect.urp from the teach pendant 
 					load_urp = rospy.ServiceProxy('/ur_hardware_interface/dashboard/load_program', Load)
