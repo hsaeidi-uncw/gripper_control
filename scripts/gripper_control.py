@@ -38,6 +38,10 @@ if __name__ == '__main__':
 		load_urp = rospy.ServiceProxy('/ur_hardware_interface/dashboard/load_program', Load)
 		program_request = 'ros_connect.urp'
 		resp1 = load_urp(program_request) 
+		# play the code on teach pendant
+		play_urp = rospy.ServiceProxy('/ur_hardware_interface/dashboard/play', Trigger)
+		request = TriggerRequest()
+		resp1 = play_urp(request) 
 	except rospy.ServiceException as e:
 		print("Service call failed: %s"%e)	
 	while not rospy.is_shutdown():
