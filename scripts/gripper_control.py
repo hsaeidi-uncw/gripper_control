@@ -106,7 +106,7 @@ if __name__ == '__main__':
 					resp1 = play_urp(request) 
 					if resp1.success:
 						print('CONNECTED TO THE ROBOT!') 
-					rospy.sleep(0.5)
+					rospy.sleep(1.0)
 					feedback_msg.data = 3 # 0 for the original request + 3 for the success
 					task_status_pub.publish(feedback_msg)					
 				except rospy.ServiceException as e:
